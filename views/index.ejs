@@ -1,6 +1,7 @@
 <html>
 
 <div id = "display">
+	<div id = "groupsContainer"> </div>
 </div>
 
 <script
@@ -8,17 +9,10 @@
   integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
   crossorigin="anonymous"></script>
 
+<script src = "util.js"></script>
+<script>var data = <%-JSON.stringify(data)%></script>
+<script src = "initPage.js"> </script>
 
-<script>
 
-var data = <%-JSON.stringify(data)%>
-str = ""
-for(var i = 0 ; i < data.length; i++){
-	console.log(data[i].shortDescription)
-	str += data[i].shortDescription.values[0].value + "<br>";
-}
-$("#display").html(str);
-
-</script>
 
 </html>

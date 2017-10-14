@@ -11,6 +11,7 @@ var server = app.listen(port, function() {
 });
 
 
+app.use(express.static(__dirname + '/public'));
 
 
 app.get('/', function (req, resOrigin) {
