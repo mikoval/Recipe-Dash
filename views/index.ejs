@@ -1,17 +1,29 @@
 <html>
 
-<div id = "display">
+<!-- <div id = "display">
 	<div id = "groupsContainer"> </div>
-</div>
+</div> -->
 
-<script
-  src="https://code.jquery.com/jquery-3.2.1.js"
-  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-  crossorigin="anonymous"></script>
-
+<head>
+<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="crossorigin="anonymous"></script>
 <script src = "util.js"></script>
 <script>var data = <%-JSON.stringify(data)%></script>
 <script src = "initPage.js"> </script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="style.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+
+<div class="col-md-12 pg-frame" style="border: none;">
+    <div class="col-md-3 sidebar insert">
+        <p>I'm a sidebar</p>
+    </div>
+    <div class="col-md-9 pg-insert insert">
+        <p>i'm your page</p>
+    </div>
+</div>
+
 
 
 
