@@ -52,12 +52,16 @@ function getDeptNames(){
 function getDeptItems(id){
 	var arr = [];
 
-	for(var i = 0 ; i < data.length; i++){
-		var itemID = data[i].departmentId;
-		
-	}
 	// todo 
 	// go over the items and get the items that belong
+	
+	for(var i = 0 ; i < data.length; i++){
+		var itemID = data[i].departmentId;
+		if (itemID == id) {
+			arr.push({name: data[i].shortDescription.values[0].value, description: data[i].longDescription.values[0].value});
+		}
+		
+	}
 	return arr;
 }
 
