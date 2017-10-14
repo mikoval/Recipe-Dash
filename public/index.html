@@ -1,0 +1,31 @@
+<html>
+test
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+<script>
+console.log("making request")
+$.ajax({
+    type:"GET",
+    dataType : 'jsonp',
+    crossDomain: true,
+    url: 'https://hackgt-api.ncrcloud.com/catalog/2.0.2/items/1.0/snapshot',
+    headers: { 
+    	"Authorization" : "Basic L29yZy0xL2FkbWluOkNoYW5nM20zISEtYWRtaW4tb3JnLTE=",
+      "nep-application-key" : "8a82859f5ef21870015ef2fa5e5f0000",
+      "content-type": "application/json",
+     },
+    success: function(result){
+    	console.log("result");
+
+    },
+    error: function(err){
+
+    	console.log(err)
+    }
+
+});
+</script>
+
+</html>
