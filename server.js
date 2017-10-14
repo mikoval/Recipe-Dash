@@ -37,7 +37,6 @@ app.get('/', function (req, resOrigin) {
 
         res.on('end', function() {
             var obj = JSON.parse(output);
-            console.log(obj.snapshot[0].shortDescription);
 
             resOrigin.render('index.ejs', {
             	data: obj.snapshot
