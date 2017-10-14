@@ -13,7 +13,7 @@ var server = app.listen(port, function() {
 
 
 
-app.get('/', function (req, res) {
+app.get('/', function (req, resOrigin) {
 	var output = "";
 	var options = {
 	  host: 'hackgt-api.ncrcloud.com',
@@ -37,12 +37,16 @@ app.get('/', function (req, res) {
         res.on('end', function() {
             var obj = JSON.parse(output);
             console.log(obj.snapshot[0].shortDescription);
+
+            resOrigin.render('index.ejs', {
+            	data: obj.snapshot
+            })
         });
 	});
 
 
 
-  res.render('index.ejs')
+  
 })
 app.disable('view cache');
 

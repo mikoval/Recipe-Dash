@@ -1,11 +1,24 @@
 <html>
-test
+
+<div id = "display">
+</div>
+
 <script
   src="https://code.jquery.com/jquery-3.2.1.js"
   integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
   crossorigin="anonymous"></script>
+
+
 <script>
-console.log("making request")
+
+var data = <%-JSON.stringify(data)%>
+str = ""
+for(var i = 0 ; i < data.length; i++){
+	console.log(data[i].shortDescription)
+	str += data[i].shortDescription.values[0].value + "<br>";
+}
+$("#display").html(str);
+
 </script>
 
 </html>
