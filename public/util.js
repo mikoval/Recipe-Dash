@@ -54,7 +54,7 @@ function getDeptItems(id){
 
 	for(var i = 0 ; i < data.length; i++){
 		var itemID = data[i].departmentId;
-		
+
 	}
 	// todo 
 	// go over the items and get the items that belong
@@ -67,4 +67,36 @@ function createDeptMenu(){
 function viewDept(id){
 	var items = getDeptItems(id);
 	//do whatever with the items to display
+}
+
+function loadItem(itemCode){
+	$.ajax({
+		url: "/item?id="+itemCode,
+		success: function(data){
+			console.log(data);
+			displayItem(data);
+		}, 
+		error: function(err){
+			console.log(err);
+		}
+	})
+}
+function displayItem(data){
+	//$("#page").html(data);
+
+	var keyword = "peach";
+	$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+        {
+            tags: keyword,
+            tagmode: "any",
+            format: "json"
+        },
+        function(data) {
+
+            var image_src = data.items[0]['media']['m'].replace("_m", "_b");
+
+            $('body').css('background-image', "url('" + image_src + "')");
+
+        });
+
 }

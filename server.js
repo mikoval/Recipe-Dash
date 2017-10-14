@@ -1,5 +1,6 @@
 var express = require('express');
 var https = require('https');
+
 var app = express();
 var port = process.env.PORT || 8080;
 app.engine('html', require('ejs').renderFile)
@@ -48,6 +49,45 @@ app.get('/', function (req, resOrigin) {
 
   
 })
+app.get('/item', function (req, resOrigin) {
+	const itemID = req.query.itemID;
+	var output = "";
+	var options = {
+	  host: 'hackgt-api.ncrcloud.com',
+	  port: 443,
+	  path: '/catalog/item-prices/snapshot',
+	  method: 'GET',
+	  headers: {
+	  	"Authorization" : "Basic L29yZy0xL2FkbWluOkNoYW5nM20zISEtYWRtaW4tb3JnLTE=",
+	    "nep-application-key" : "8a82859f5ef21870015ef2fa5e5f0000",
+    	"Content-Type": "application/json",
+	  }
+
+
+	};
+
+	var tmp = https.get(options, function(res) {
+		res.on('data', function (chunk) {
+            output += chunk;
+        });
+
+        res.on('end', function() {
+            var obj = JSON.parse(output);
+            var snapshot = obj.snapshot;
+            for (var i = 0; i < snapshot.length; i++){
+            	console.log(snapshot[i].priceId.itemCode)
+            	if(snapshot[i].priceId.itemCode == itemID){
+            		resOrigin.send(JSON.stringify({ price :snapshot[i].price }));
+            	}
+            }
+            resOrigin.send(JSON.stringify({ price :"NA" }));
+
+            
+        });
+	});
+
+
+});
 app.disable('view cache');
 
 
