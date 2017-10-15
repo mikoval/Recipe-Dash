@@ -18,10 +18,11 @@ $(document).ready(function () {
         })
     })
     var url = getParameterByName('url');
-    if(url.length > 0);
-    $("#searchMore").val(url);
-    $("#searchMore-btn").trigger("click");
-
+    if (url != null) {
+        if(url.length > 0);
+        $("#searchMore").val(url);
+        $("#searchMore-btn").trigger("click");
+    }
 
 });
 
