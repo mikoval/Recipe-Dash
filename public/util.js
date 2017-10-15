@@ -107,7 +107,7 @@ function updateDisplay(){
 		var names = keys[i];
 		var id = ingredients[keys[i]].id;
 		str += "<tr>"
-		str += "<td><input  class = 'item-quantity' itemname='"+names+"' value='"+measurement+"'></td>"
+		str += "<td><input  class = 'item-quantity' itemname='"+names+"' value='"+measurement.toFixed(2)+"'></td>"
 		str += "<td>" + unit +"</td>"
 		str += "<td>" + names +"</td>"
 		str += "<td id='quantity-"+id + "' >" + Math.ceil(quantity) +"</td>"
