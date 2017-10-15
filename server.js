@@ -5,8 +5,7 @@ var app = express();
 var port = process.env.PORT || 8080;
 const request = require('request');
 const cheerio = require('cheerio');
-var WordPOS = require('wordpos'),
-    wordpos = new WordPOS();
+
 
 
 app.engine('html', require('ejs').renderFile)
