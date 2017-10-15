@@ -5,3 +5,13 @@ div {
 .insert {
     margin-top: 20px;
 }
+
+#search{
+	width:90%;
+	padding:10px;
+
+}
+#search-btn{
+	width:10%;
+	padding:10px;
+}

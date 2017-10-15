@@ -1,107 +1,26 @@
-// load the data
-
-
-
-$(".department").on("click", function(){
-	var deptID = $(this).attr("deptID");
-	viewDept(deptID);
-
-
-})
-
-
-function getGroupsNames(){
-	return {
-		1:"group 1",
-		2:"group 2",
-		3:"group 3",
-		4:"group 4",
-		5:"group 5",
-		6:"group 6",
-
-
-	}
-}
-
-function getDeptNames(){
-	return [
-		{name: "dept 1", group: 1},
-		{name: "dept 2", group: 2},
-		{name: "dept 3", group: 3},
-		{name: "dept 4", group: 4},
-		{name: "dept 5", group: 5},
-		{name: "dept 6", group: 6},
-		{name: "dept 7", group: 1},
-		{name: "dept 8", group: 1},
-		{name: "dept 9", group: 1},
-		{name: "dept 10", group: 1},
-		{name: "dept 11", group: 1},
-		{name: "dept 12", group: 1},
-		{name: "dept 13", group: 1},
-		{name: "dept 14", group: 1},
-		{name: "dept 15", group: 1},
-		{name: "dept 16", group: 1},
-		{name: "dept 17", group: 1},
-		{name: "dept 18", group: 1},
-		{name: "dept 19", group: 1},
-		{name: "dept 20", group: 1},
-		{name: "dept 21", group: 1},
-	]
-}
-
-function getDeptItems(id){
-	var arr = [];
-
-	// todo 
-	// go over the items and get the items that belong
-	
-	for(var i = 0 ; i < data.length; i++){
-		var itemID = data[i].departmentId;
-		if (itemID == id) {
-			arr.push({name: data[i].shortDescription.values[0].value, description: data[i].longDescription.values[0].value});
+var ingredients = {}
+function addIngredients(input){
+	for(var i = 0; i < input.length; i++){
+		var name = input[i].name;
+		var newName = convertName(name);
+		console.log(name + " -> " + newName);
+		if(ingredients[name] == undefined){
+			ingredients[name] = {quantity: input[i].quantity, unit:input[i].unit}
 		}
-		
-
-	}
-	return arr;
-}
-
-function createDeptMenu(){
-	// create menu that has a list of items 
-}
-function viewDept(id){
-	var items = getDeptItems(id);
-	//do whatever with the items to display
-}
-
-function loadItem(itemCode){
-	$.ajax({
-		url: "/item?id="+itemCode,
-		success: function(data){
-			console.log(data);
-			displayItem(data);
-		}, 
-		error: function(err){
-			console.log(err);
+		else{
+			ingredients[name].quantity += input[i].quantity;
 		}
-	})
+	}
+	console.log(ingredients);
 }
-function displayItem(data){
-	//$("#page").html(data);
+function convertName(name){
+	for(var i = 0; i < data.length; i++){
+		var dataName = data[i].shortDescription.values[0].value;
+		if(dataName.toLowerCase().includes(name.toLowerCase())){
+			return dataName;
+		}
+	}
+	return "";
 
-	var keyword = "peach";
-	$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
-        {
-            tags: keyword,
-            tagmode: "any",
-            format: "json"
-        },
-        function(data) {
-
-            var image_src = data.items[0]['media']['m'].replace("_m", "_b");
-
-            $('body').css('background-image', "url('" + image_src + "')");
-
-        });
 
 }

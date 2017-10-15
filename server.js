@@ -3,6 +3,10 @@ var https = require('https');
 
 var app = express();
 var port = process.env.PORT || 8080;
+const request = require('request');
+const cheerio = require('cheerio');
+
+
 app.engine('html', require('ejs').renderFile)
 
 
@@ -49,6 +53,7 @@ app.get('/', function (req, resOrigin) {
 
   
 })
+/*
 app.get('/item', function (req, resOrigin) {
 	const itemID = req.query.itemID;
 	var output = "";
@@ -88,7 +93,50 @@ app.get('/item', function (req, resOrigin) {
 
 
 });
+*/
+app.get('/url', function (req, resOrigin) {
+	const url = req.query.url;
+	console.log(url);
+	request(url, function (error, response, html) {
+		
+	  if (!error && response.statusCode == 200) {
+
+	    
+	      
+	  	var data;
+		if(url.includes("familycircle") ){
+			data = getFamilyCircle(html);
+		}
+		resOrigin.send(JSON.stringify(data));
+	  }
+	});
+
+
+
+	})
 app.disable('view cache');
 
+
+function getFamilyCircle(html){
+	var $ = cheerio.load(html);
+	var ret = [];
+	var ingredients = $(".ingredients");
+	var items = ingredients.find(".ingredient");
+
+	items.each(function(){
+		var amount = $(this).find(".amount");
+		var quantity = $($(amount[0]).find("span")[0]).html();
+		var unit = $($(amount[0]).find("span")[1]).html();
+		var name = $($(this).find(".name")).html();
+
+		quantity = quantity.replace("<br>", "").trim();
+		unit = unit.replace("<br>", "").trim();
+		name = name.replace("<br>", "").trim();
+		//console.log(quantity + " " + unit + " " + name);
+		ret.push({quantity:quantity, unit:unit, name:name});
+
+	})
+	return ret
+}
 
 

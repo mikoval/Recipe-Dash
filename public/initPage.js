@@ -1,18 +1,15 @@
 
 $(document).ready(function () {
-    console.log("init page")
+    $("#search-btn").on("click", function(){
+    	var url = "/url?url="+ $("#search").val();
+    	$.ajax({
+    		url: url,
+    		success: function(response){
+    			response = JSON.parse(response);
+    			addIngredients(response);
+    		}
+    	})
 
-
-    function createSidebar() {
-        var departments = getDeptNames();
-
-        for (i = 0; i < departments.length; i++) {
-            var sidebarItem = document.createElement("div");
-            sidebarItem.innerHTML = departments[i].name;
-            document.getElementById("sidebar").appendChild(sidebarItem);
-        }
-    }
-
-    createSidebar();
+    })
 });
 
