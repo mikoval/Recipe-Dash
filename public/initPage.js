@@ -11,6 +11,7 @@ $(document).ready(function () {
         $.ajax({
             url: url,
             success: function(response){
+            	console.log(response);
                 response = JSON.parse(response);
                 addIngredients(response);
             }
