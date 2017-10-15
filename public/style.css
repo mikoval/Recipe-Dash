@@ -82,6 +82,9 @@ table{
    	display:inline-block;
 
 }
+.total-price-wrapper{
+	display:inline-block;
+}
 td{
 	padding-top: 3px;
 	padding-right: 20px;
@@ -90,4 +93,12 @@ td{
 th{
 	padding-top: 3px;
 	padding-right: 20px;
+}
+tfoot{
+	padding: 50px;
+	text-align: center;
+	font-weight: bold;
+}
+#total-price{
+	padding:10px;
 }

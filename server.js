@@ -118,7 +118,7 @@ var tmp = https.get(priceOptions, function(res) {
 
 app.get('/item', function (req, resOrigin) {
 	const itemID = req.query.itemID;
-	console.log(itemID)
+
 	
 	
 
@@ -139,7 +139,7 @@ app.get('/item', function (req, resOrigin) {
 
 app.get('/url', function (req, resOrigin) {
 	const url = req.query.url;
-	console.log(url);
+
 	request(url, function (error, response, html) {
 		
 	  if (!error && response.statusCode == 200) {

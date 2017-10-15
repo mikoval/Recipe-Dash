@@ -1,13 +1,13 @@
 var ingredients = {}
 function addIngredients(input){
-	console.log(input)
+
 	for(var i = 0; i < input.length; i++){
 		var name = input[i].name;
 		var newName = convertName(name).name;
 		var id = convertName(name).id;
 
 
-		console.log(name + " -> " + newName);
+
 
 		if(ingredients[newName] == undefined){
 			ingredients[newName] = {quantity: splitQuantity(input[i].quantity), unit:input[i].unit, id: id};
@@ -17,7 +17,7 @@ function addIngredients(input){
 		}
 	}
 	
-	getPrices();
+
 	updateDisplay();
 
 }
@@ -69,7 +69,7 @@ function convertName(name){
 			}
 
 		}
-		console.log(minIndex);
+
 		return {name: data[minIndex].shortDescription.values[0].value, id:  data[minIndex].itemId.itemCode};
 	}
 }
@@ -80,7 +80,7 @@ function splitQuantity(input){
 		input = "0";
 	}
 	var splitArray = input.split(" ");
-	//console.log(input);
+
 	for (var i = 0; i < splitArray.length; i++) {
 		if (splitArray[i].includes("/")) {
 			var splitNum = splitArray[i].split("");
@@ -89,7 +89,6 @@ function splitQuantity(input){
 			quantity += parseInt(splitArray[i]);
 		}
 	}
-	//console.log(quantity);
 	return quantity;
 }
 
@@ -116,19 +115,20 @@ function updateDisplay(){
 		
 		str += "</tr>"
 	}
+	str += "<tfoot><td colspan='5'><div id = 'total-price'></div></td></tfoot>"
 	str += "</table>"
 	getPrices();
-	//console.log(str);
 	$("#items").html(str);
 	$(".item-quantity").on("change", function(){
 		var id = $(this).attr("itemname");
-		console.log(id);
+	
 		var val = $(this).val();
 		ingredients[id].quantity = parseFloat(val) || 0;
 		updateDisplay();
 	})
 }
 function getPrices(){
+	totalPrice = 0;
 	var keys = Object.keys(ingredients);
 	for(var i =0 ; i < keys.length ; i++){
 		var id = ingredients[keys[i]].id;
@@ -137,8 +137,11 @@ function getPrices(){
 			success: function(result){
 				var json = JSON.parse(result);
 				var quantity = $("#quantity-"+json.id).text();
-				console.log(quantity);
-				$("#price-"+json.id).html("$" + (json.price * quantity).toFixed(2))
+				var price =  (json.price * quantity).toFixed(2);
+				$("#price-"+json.id).html("$" + price)
+				totalPrice += parseFloat(price);
+				console.log(json.id);
+				$("#total-price").html("Total Price: $" + totalPrice.toFixed(2));
 			}
 		})
 	}
