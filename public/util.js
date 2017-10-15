@@ -4,11 +4,11 @@ function addIngredients(input){
 		var name = input[i].name;
 		var newName = convertName(name);
 		console.log(name + " -> " + newName);
-		if(ingredients[name] == undefined){
-			ingredients[name] = {quantity: input[i].quantity, unit:input[i].unit}
+		if(ingredients[newName] == undefined){
+			ingredients[newName] = {quantity: splitQuantity(input[i].quantity), unit:input[i].unit};
 		}
 		else{
-			ingredients[name].quantity += input[i].quantity;
+			ingredients[newName].quantity += splitQuantity(input[i].quantity);
 		}
 	}
 	console.log(ingredients);
@@ -21,6 +21,20 @@ function convertName(name){
 		}
 	}
 	return "";
+}
 
-
+function splitQuantity(input){
+	var quantity = 0;
+	var splitArray = input.split(" ");
+	// console.log(splitArray);
+	for (var i = 0; i < splitArray.length; i++) {
+		if (splitArray[i].includes("/")) {
+			var splitNum = splitArray[i].split("");
+			quantity += (parseInt(splitNum[0])) / (parseInt(splitNum[2]));
+		} else {
+			quantity += parseInt(splitArray[i]);
+		}
+	}
+	console.log(quantity);
+	return quantity;
 }
