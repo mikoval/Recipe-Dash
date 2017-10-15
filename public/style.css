@@ -1,10 +1,21 @@
-div {
-    height: 100vh;
-    border: 1px solid black;
+.page-base {
+    min-height: 100%;
+    border: none;
 }
-.insert {
-    margin-top: 20px;
+
+#search-container {
+/*    margin: auto;
+    vertical-align: middle;*/
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 50%;
+    border: 1px solid orange;
+
 }
+
 
 #search{
 	width:90%;
