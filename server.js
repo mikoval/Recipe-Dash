@@ -5,6 +5,8 @@ var app = express();
 var port = process.env.PORT || 8080;
 const request = require('request');
 const cheerio = require('cheerio');
+var WordPOS = require('wordpos'),
+    wordpos = new WordPOS();
 
 
 app.engine('html', require('ejs').renderFile)
@@ -19,83 +21,12 @@ var server = app.listen(port, function() {
 app.use(express.static(__dirname + '/public'));
 
 
-
-  app.get('/', function (req, resOrigin) {
-    var output = "";
-    var options = {
-      host: 'hackgt-api.ncrcloud.com',
-      port: 443,
-      path: '/catalog/items/snapshot',
-      method: 'GET',
-      headers: {
-        "Authorization" : "Basic L29yZy0xL2FkbWluOkNoYW5nM20zISEtYWRtaW4tb3JnLTE=",
-        "nep-application-key" : "8a82859f5ef21870015ef2fa5e5f0000",
-        "Content-Type": "application/json",
-      }
-
-
-    };
-
-    var tmp = https.get(options, function(res) {
-        res.on('data', function (chunk) {
-            output += chunk;
-        });
-
-        res.on('end', function() {
-            var obj = JSON.parse(output);
-
-            resOrigin.render('index.ejs', {
-                data: obj.snapshot
-            })
-        });
-    });
-
-
-
-})
-
-
-  app.get('/cart', function (req, resOrigin) {
-    var output = "";
-    var options = {
-      host: 'hackgt-api.ncrcloud.com',
-      port: 443,
-      path: '/catalog/items/snapshot',
-      method: 'GET',
-      headers: {
-        "Authorization" : "Basic L29yZy0xL2FkbWluOkNoYW5nM20zISEtYWRtaW4tb3JnLTE=",
-        "nep-application-key" : "8a82859f5ef21870015ef2fa5e5f0000",
-        "Content-Type": "application/json",
-      }
-
-
-    };
-
-    var tmp = https.get(options, function(res) {
-        res.on('data', function (chunk) {
-            output += chunk;
-        });
-
-        res.on('end', function() {
-            var obj = JSON.parse(output);
-
-            resOrigin.render('cart.ejs', {
-                data: obj.snapshot
-            })
-        });
-    });
-})
-
-
-
-/*
-app.get('/item', function (req, resOrigin) {
-	const itemID = req.query.itemID;
+app.get('/', function (req, resOrigin) {
 	var output = "";
 	var options = {
 	  host: 'hackgt-api.ncrcloud.com',
 	  port: 443,
-	  path: '/catalog/item-prices/snapshot',
+	  path: '/catalog/items/snapshot',
 	  method: 'GET',
 	  headers: {
 	  	"Authorization" : "Basic L29yZy0xL2FkbWluOkNoYW5nM20zISEtYWRtaW4tb3JnLTE=",
@@ -113,38 +44,115 @@ app.get('/item', function (req, resOrigin) {
 
         res.on('end', function() {
             var obj = JSON.parse(output);
-            var snapshot = obj.snapshot;
-            for (var i = 0; i < snapshot.length; i++){
-            	console.log(snapshot[i].priceId.itemCode)
-            	if(snapshot[i].priceId.itemCode == itemID){
-            		resOrigin.send(JSON.stringify({ price :snapshot[i].price }));
-            	}
-            }
-            resOrigin.send(JSON.stringify({ price :"NA" }));
+
+            resOrigin.render('index.ejs', {
+            	data: obj.snapshot
+            })
+        });
+	});
+
+
+
+  
+})
+app.get('/cart', function (req, resOrigin) {
+	var output = "";
+	var options = {
+	  host: 'hackgt-api.ncrcloud.com',
+	  port: 443,
+	  path: '/catalog/items/snapshot',
+	  method: 'GET',
+	  headers: {
+	  	"Authorization" : "Basic L29yZy0xL2FkbWluOkNoYW5nM20zISEtYWRtaW4tb3JnLTE=",
+	    "nep-application-key" : "8a82859f5ef21870015ef2fa5e5f0000",
+    	"Content-Type": "application/json",
+	  }
+
+
+	};
+
+	var tmp = https.get(options, function(res) {
+		res.on('data', function (chunk) {
+            output += chunk;
+        });
+
+        res.on('end', function() {
+            var obj = JSON.parse(output);
+
+            resOrigin.render('cart.ejs', {
+            	data: obj.snapshot
+            })
+        });
+	});
+
+
+
+  
+})
+
+var priceOptions = {
+	  host: 'hackgt-api.ncrcloud.com',
+	  port: 443,
+	  path: '/catalog/item-prices/snapshot',
+	  method: 'GET',
+	  headers: {
+	  	"Authorization" : "Basic L29yZy0xL2FkbWluOkNoYW5nM20zISEtYWRtaW4tb3JnLTE=",
+	    "nep-application-key" : "8a82859f5ef21870015ef2fa5e5f0000",
+    	"Content-Type": "application/json",
+	  }
+	}
+	var output = "";
+var tmp = https.get(priceOptions, function(res) {
+		res.on('data', function (chunk) {
+            output += chunk;
+        });
+
+        res.on('end', function() {
+            var obj = JSON.parse(output);
+            prices = obj.snapshot;
+            
 
             
         });
 	});
 
+app.get('/item', function (req, resOrigin) {
+	const itemID = req.query.itemID;
+	console.log(itemID)
+	
+	
+
+	for (var i = 0; i < prices.length; i++){
+            	
+    	if(prices[i].priceId.itemCode == itemID){
+    		resOrigin.send(JSON.stringify({ price :prices[i].price, id: itemID }));
+    		return;
+    	}
+    }
+    resOrigin.send(JSON.stringify({ price :"NA" , id: itemID}));
+	
+
+	
+
 
 });
-*/
+
 app.get('/url', function (req, resOrigin) {
 	const url = req.query.url;
 	console.log(url);
 	request(url, function (error, response, html) {
 		
 	  if (!error && response.statusCode == 200) {
+
+	    
+	      
 	  	var data;
 		if(url.includes("familycircle") ){
 			data = getFamilyCircle(html);
 		}
 		resOrigin.send(JSON.stringify(data));
-        // return resOrigin.redirect("/cart.ejs");
 	  }
 	});
-
-
 
 	})
 app.disable('view cache');
@@ -165,11 +173,21 @@ function getFamilyCircle(html){
 		quantity = quantity.replace("<br>", "").trim();
 		unit = unit.replace("<br>", "").trim();
 		name = name.replace("<br>", "").trim();
-		//console.log(quantity + " " + unit + " " + name);
 		ret.push({quantity:quantity, unit:unit, name:name});
+		
+
+		
 
 	})
 	return ret
 }
+
+
+
+
+
+
+
+
 
 

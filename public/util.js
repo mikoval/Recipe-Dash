@@ -3,17 +3,23 @@ function addIngredients(input){
 	console.log(input)
 	for(var i = 0; i < input.length; i++){
 		var name = input[i].name;
-		var newName = convertName(name);
+		var newName = convertName(name).name;
+		var id = convertName(name).id;
+
+
 		console.log(name + " -> " + newName);
 
 		if(ingredients[newName] == undefined){
-			ingredients[newName] = {quantity: splitQuantity(input[i].quantity), unit:input[i].unit};
+			ingredients[newName] = {quantity: splitQuantity(input[i].quantity), unit:input[i].unit, id: id};
 		}
 		else{
 			ingredients[newName].quantity += splitQuantity(input[i].quantity);
 		}
 	}
-	console.log(ingredients);
+	
+	getPrices();
+	updateDisplay();
+
 }
 function convertName(name){
 	var minLength = 99999999999;
@@ -32,7 +38,7 @@ function convertName(name){
 
 	}
 	if (minIndex != undefined) {
-		return data[minIndex].shortDescription.values[0].value;
+		return {name: data[minIndex].shortDescription.values[0].value, id:  data[minIndex].itemId.itemCode};
 	} else {
 		var array = name.split(" ");
 		for (var i = 0; i < data.length; i++){
@@ -63,8 +69,8 @@ function convertName(name){
 			}
 
 		}
-
-		return data[minIndex].shortDescription.values[0].value;
+		console.log(minIndex);
+		return {name: data[minIndex].shortDescription.values[0].value, id:  data[minIndex].itemId.itemCode};
 	}
 }
 
@@ -74,7 +80,7 @@ function splitQuantity(input){
 		input = "0";
 	}
 	var splitArray = input.split(" ");
-	console.log(input);
+	//console.log(input);
 	for (var i = 0; i < splitArray.length; i++) {
 		if (splitArray[i].includes("/")) {
 			var splitNum = splitArray[i].split("");
@@ -83,6 +89,57 @@ function splitQuantity(input){
 			quantity += parseInt(splitArray[i]);
 		}
 	}
-	console.log(quantity);
+	//console.log(quantity);
 	return quantity;
+}
+
+function updateDisplay(){
+	var keys = Object.keys(ingredients);
+	var str = "<table>";
+	str += "<thead><th colspan='2'>Measurement</th><th>Ingredients</th><th>Quantity</th><th>Price</th></thead>"
+	for(var i =0 ; i < keys.length ; i++){
+		var quantity = ingredients[keys[i]].quantity;
+		var measurement = ingredients[keys[i]].quantity;
+		if(quantity == 0){
+			quantity = 1;
+		}
+		quantity =  quantity.toFixed(2)
+		var unit = ingredients[keys[i]].unit;
+		var names = keys[i];
+		var id = ingredients[keys[i]].id;
+		str += "<tr>"
+		str += "<td><input  class = 'item-quantity' itemname='"+names+"' value='"+measurement+"'></td>"
+		str += "<td>" + unit +"</td>"
+		str += "<td>" + names +"</td>"
+		str += "<td id='quantity-"+id + "' >" + Math.ceil(quantity) +"</td>"
+		str += "<td id='price-"+id + "'></td>"
+		
+		str += "</tr>"
+	}
+	str += "</table>"
+	getPrices();
+	//console.log(str);
+	$("#items").html(str);
+	$(".item-quantity").on("change", function(){
+		var id = $(this).attr("itemname");
+		console.log(id);
+		var val = $(this).val();
+		ingredients[id].quantity = parseFloat(val) || 0;
+		updateDisplay();
+	})
+}
+function getPrices(){
+	var keys = Object.keys(ingredients);
+	for(var i =0 ; i < keys.length ; i++){
+		var id = ingredients[keys[i]].id;
+		$.ajax({
+			url: "/item?itemID="+ id,
+			success: function(result){
+				var json = JSON.parse(result);
+				var quantity = $("#quantity-"+json.id).text();
+				console.log(quantity);
+				$("#price-"+json.id).html("$" + (json.price * quantity).toFixed(2))
+			}
+		})
+	}
 }
